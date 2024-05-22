@@ -9,7 +9,7 @@ export const loader = () => {
   });
 };
 
-export default function Defer() {
+export default function DeferWithSuspense() {
   const data = useLoaderData<typeof loader>();
 
   return (

@@ -4,8 +4,6 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
-  LiveReload
 } from "@remix-run/react";
 import { NonceContext } from "./components/NonceContext";
 
@@ -21,9 +19,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-        <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
       </body>
     </html>
   );

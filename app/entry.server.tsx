@@ -28,7 +28,7 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  responseHeaders.set('Content-Security-Policy', `script-src 'self' 'nonce-${NONCE}' 'strict-dynamic'; connect-src ws://localhost:*`)
+  responseHeaders.set('Content-Security-Policy', `script-src 'self' 'nonce-${NONCE}' 'strict-dynamic'; connect-src 'self' ws://localhost:* 'nonce-${NONCE}'`)
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
