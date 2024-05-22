@@ -11,6 +11,10 @@ import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import { NonceContext } from "./components/NonceContext";
+
+// In real applications you would generate a new nonce for each request.
+const NONCE = "sample-nonce";
 
 const ABORT_DELAY = 5_000;
 
@@ -24,6 +28,7 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  responseHeaders.set('Content-Security-Policy', `script-src 'self' 'nonce-${NONCE}' 'strict-dynamic'; connect-src ws://localhost:*`)
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
@@ -48,11 +53,13 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
+      <NonceContext.Provider value={NONCE}>
       <RemixServer
         context={remixContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
-      />,
+      />
+      </NonceContext.Provider>,
       {
         onAllReady() {
           shellRendered = true;
@@ -98,11 +105,13 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
+      <NonceContext.Provider value={NONCE}>
       <RemixServer
         context={remixContext}
         url={request.url}
         abortDelay={ABORT_DELAY}
-      />,
+      />
+      </NonceContext.Provider>,
       {
         onShellReady() {
           shellRendered = true;

@@ -1,12 +1,16 @@
+import {useContext} from 'react'
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  LiveReload
 } from "@remix-run/react";
+import { NonceContext } from "./components/NonceContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const nonce = useContext(NonceContext);
   return (
     <html lang="en">
       <head>
@@ -17,8 +21,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-        <ScrollRestoration />
-        <Scripts />
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
+        <LiveReload nonce={nonce} />
       </body>
     </html>
   );
